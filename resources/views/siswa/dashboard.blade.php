@@ -14,7 +14,7 @@ Halo, {{ auth()->user()->name}}
 <p class="mt-2">
     Selamat datang di Aplikasi absensi Digital.</p>
 <p class="mt-6">
-    <button>
+    <button
         class="px-4 py-2 bg-blue-600 text-white rounded">
         Scan QR absensi
     </button>
