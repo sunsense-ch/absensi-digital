@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Siswa\SiswaDashboardController;
+use App\Http\Controllers\Admin\ClassRoomController;
+use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\QrLocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +42,9 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-
+        Route::resource('classes', ClassRoomController::class);
+        Route::resource('students', StudentController::class);
+        Route::resource('qr-locations', QrLocationController::class);
     });
 
 Route::middleware(['auth', 'role:siswa'])
@@ -47,7 +52,6 @@ Route::middleware(['auth', 'role:siswa'])
     ->name('siswa.')
     ->group(function () {
         Route::get('/dashboard', [SiswaDashboardController::class, 'index'])->name('dashboard');
-
     });
 
 require __DIR__.'/auth.php';
