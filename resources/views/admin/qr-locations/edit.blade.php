@@ -1,108 +1,53 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col gap-1">
-            <h2 class="font-serif text-2xl text-stone-800">Edit Lokasi QR</h2>
-            <p class="text-sm text-stone-500">Perbarui data lokasi "{{ $qrLocation->name }}".</p>
-        </div>
+        <h2>Edit Lokasi QR</h2>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
-            <div class="rounded-lg border border-stone-200 bg-white p-6">
-                <form method="POST" action="{{ route('admin.qr-locations.update', $qrLocation) }}" class="space-y-5">
-                    @csrf
-                    @method('PUT')
+    <div class="card" style="max-width:520px;">
+        <form method="POST" action="{{ route('admin.qr-locations.update', $qrLocation) }}">
+            @csrf
+            @method('PUT')
 
-                    <div>
-                        <label for="name" class="mb-1 block text-sm font-medium text-stone-700">
-                            Nama Lokasi
-                        </label>
-                        <input
-                            id="name"
-                            type="text"
-                            name="name"
-                            value="{{ old('name', $qrLocation->name) }}"
-                            class="block w-full rounded-md border-stone-300 text-sm shadow-sm focus:border-emerald-600 focus:ring-emerald-600">
-                        @error('name')
-                            <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="code" class="mb-1 block text-sm font-medium text-stone-700">
-                            Kode Lokasi
-                        </label>
-                        <input
-                            id="code"
-                            type="text"
-                            name="code"
-                            value="{{ old('code', $qrLocation->code) }}"
-                            class="block w-full rounded-md border-stone-300 text-sm shadow-sm focus:border-emerald-600 focus:ring-emerald-600">
-                        @error('code')
-                            <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label for="latitude" class="mb-1 block text-sm font-medium text-stone-700">
-                                Latitude
-                            </label>
-                            <input
-                                id="latitude"
-                                type="number"
-                                step="any"
-                                name="latitude"
-                                value="{{ old('latitude', $qrLocation->latitude) }}"
-                                class="block w-full rounded-md border-stone-300 text-sm shadow-sm focus:border-emerald-600 focus:ring-emerald-600">
-                            @error('latitude')
-                                <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label for="longitude" class="mb-1 block text-sm font-medium text-stone-700">
-                                Longitude
-                            </label>
-                            <input
-                                id="longitude"
-                                type="number"
-                                step="any"
-                                name="longitude"
-                                value="{{ old('longitude', $qrLocation->longitude) }}"
-                                class="block w-full rounded-md border-stone-300 text-sm shadow-sm focus:border-emerald-600 focus:ring-emerald-600">
-                            @error('longitude')
-                                <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="radius" class="mb-1 block text-sm font-medium text-stone-700">
-                            Radius (meter)
-                        </label>
-                        <input
-                            id="radius"
-                            type="number"
-                            name="radius"
-                            value="{{ old('radius', $qrLocation->radius) }}"
-                            class="block w-full rounded-md border-stone-300 text-sm shadow-sm focus:border-emerald-600 focus:ring-emerald-600">
-                        @error('radius')
-                            <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="flex items-center gap-3 pt-2">
-                        <button type="submit"
-                            class="rounded-md bg-emerald-800 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2">
-                            Update
-                        </button>
-                        <a href="{{ route('admin.qr-locations.index') }}" class="text-sm text-stone-500 hover:text-stone-700">
-                            Batal
-                        </a>
-                    </div>
-                </form>
+            <div class="field">
+                <label>Nama Lokasi</label>
+                <input type="text" name="name" value="{{ old('name', $qrLocation->name) }}">
+                @error('name') <span class="error">{{ $message }}</span> @enderror
             </div>
-        </div>
+
+            <div class="field">
+                <label>Kode Lokasi</label>
+                <input type="text" name="code" value="{{ old('code', $qrLocation->code) }}">
+                @error('code') <span class="error">{{ $message }}</span> @enderror
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="field" style="margin:0;">
+                    <label>Latitude</label>
+                    <input type="number" step="any" name="latitude" value="{{ old('latitude', $qrLocation->latitude) }}">
+                    @error('latitude') <span class="error">{{ $message }}</span> @enderror
+                </div>
+                <div class="field" style="margin:0;">
+                    <label>Longitude</label>
+                    <input type="number" step="any" name="longitude" value="{{ old('longitude', $qrLocation->longitude) }}">
+                    @error('longitude') <span class="error">{{ $message }}</span> @enderror
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Radius (meter)</label>
+                <input type="number" name="radius" value="{{ old('radius', $qrLocation->radius) }}">
+                @error('radius') <span class="error">{{ $message }}</span> @enderror
+            </div>
+
+            <div class="field" style="display:flex;align-items:center;gap:8px;">
+                <input type="checkbox" name="is_active" value="1" {{ old('is_active', $qrLocation->is_active) ? 'checked' : '' }} style="width:auto;">
+                <label style="margin:0;">Lokasi aktif</label>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Update</button>
+                <a href="{{ route('admin.qr-locations.index') }}" class="btn btn-outline">Batal</a>
+            </div>
+        </form>
     </div>
 </x-app-layout>

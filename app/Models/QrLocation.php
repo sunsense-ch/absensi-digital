@@ -9,26 +9,28 @@ class QrLocation extends Model
 {
     use HasFactory;
 
-    /**
-     * Kolom yang diizinkan untuk diisi secara massal (mass assignment).
-     *
-     * s
-     */
+    // PENTING: sebelumnya properti ini tidak ada, sehingga QrLocation::create()
+    // di controller akan melempar MassAssignmentException.
     protected $fillable = [
         'name',
         'code',
         'latitude',
         'longitude',
         'radius',
+        'is_active',
     ];
 
-public function tokens()
-{
-    return $this->hasMany(QrToken::class);
-}
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
 
-public function attendances()
-{
-    return $this->hasMany(Attendance::class);
-}
+    public function tokens()
+    {
+        return $this->hasMany(QrToken::class, 'qr_location_id');
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 }

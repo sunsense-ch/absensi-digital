@@ -1,158 +1,130 @@
-<nav x-data="{ mobileOpen: false }" class="border-b border-stone-200 bg-white">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="flex h-16 justify-between">
+{{--
+    resources/views/layouts/navigation.blade.php
 
-            <div class="flex">
-                {{-- Brand --}}
-                <a href="{{ route('dashboard') }}" class="flex shrink-0 items-center">
-                    <span class="font-serif text-lg text-stone-800">Absensi Digital</span>
-                </a>
+    Ini SATU-SATUNYA navbar/navigasi aplikasi (bentuk sidebar).
+    File ini di-include otomatis oleh components/app-layout.blade.php,
+    jadi kamu TIDAK perlu memanggil atau menulis ulang ini di
+    dashboard.blade.php, data-kelas.blade.php, dsb.
+--}}
+<div x-data="{ mobileOpen: false }">
 
-                {{-- Desktop nav links --}}
-                <div class="hidden sm:ml-10 sm:flex sm:space-x-8">
-                    <a href="{{ route('dashboard') }}"
-                        class="inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium transition-colors
-                            {{ request()->routeIs('dashboard')
-                                ? 'border-emerald-700 text-stone-800'
-                                : 'border-transparent text-stone-500 hover:border-stone-300 hover:text-stone-800' }}">
-                        Dashboard
-                    </a>
+    {{-- Tombol buka sidebar khusus mobile --}}
+    <button
+        @click="mobileOpen = !mobileOpen"
+        class="md:hidden fixed top-4 left-4 z-50 bg-[#0D1F17] text-white p-2 rounded-lg shadow-lg"
+    >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+    </button>
 
-                    @if(auth()->user()->role === 'admin')
-                        <a href="{{ route('admin.classes.index') }}"
-                            class="inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium transition-colors
-                                {{ request()->routeIs('admin.classes.*')
-                                    ? 'border-emerald-700 text-stone-800'
-                                    : 'border-transparent text-stone-500 hover:border-stone-300 hover:text-stone-800' }}">
-                            Data Kelas
-                        </a>
+    {{-- Overlay gelap saat sidebar dibuka di mobile --}}
+    <div
+        x-show="mobileOpen"
+        x-transition.opacity
+        @click="mobileOpen = false"
+        style="display: none;"
+        class="fixed inset-0 bg-black/40 z-30 md:hidden"
+    ></div>
 
-                        <a href="{{ route('admin.students.index') }}"
-                            class="inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium transition-colors
-                                {{ request()->routeIs('admin.students.*')
-                                    ? 'border-emerald-700 text-stone-800'
-                                    : 'border-transparent text-stone-500 hover:border-stone-300 hover:text-stone-800' }}">
-                            Data Siswa
-                        </a>
-
-                        <a href="{{ route('admin.qr-locations.index') }}"
-                            class="inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium transition-colors
-                                {{ request()->routeIs('admin.qr-locations.*')
-                                    ? 'border-emerald-700 text-stone-800'
-                                    : 'border-transparent text-stone-500 hover:border-stone-300 hover:text-stone-800' }}">
-                            Lokasi QR
-                        </a>
-                    @endif
-                </div>
-            </div>
-
-            {{-- Desktop user dropdown --}}
-            <div class="hidden sm:ml-6 sm:flex sm:items-center">
-                <div x-data="{ open: false }" class="relative">
-                    <button
-                        @click="open = !open"
-                        @click.outside="open = false"
-                        class="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-stone-600 transition-colors hover:bg-stone-50">
-                        {{ Auth::user()->name }}
-                        <svg class="h-4 w-4 text-stone-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-                        </svg>
-                    </button>
-
-                    <div
-                        x-show="open"
-                        x-transition
-                        style="display: none;"
-                        class="absolute right-0 z-50 mt-2 w-44 rounded-md border border-stone-200 bg-white py-1">
-                        <a href="{{ route('profile.edit') }}"
-                            class="block px-4 py-2 text-sm text-stone-600 hover:bg-stone-50">
-                            Profil
-                        </a>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit"
-                                class="block w-full px-4 py-2 text-left text-sm text-stone-600 hover:bg-stone-50">
-                                Keluar
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Mobile hamburger button --}}
-            <div class="-mr-2 flex items-center sm:hidden">
-                <button
-                    @click="mobileOpen = !mobileOpen"
-                    class="inline-flex items-center justify-center rounded-md p-2 text-stone-500 hover:bg-stone-50 hover:text-stone-700 focus:outline-none">
-                    <svg class="h-6 w-6" :class="{ 'hidden': mobileOpen, 'block': !mobileOpen }" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+    <aside
+        class="w-72 bg-[#0D1F17] min-h-screen flex flex-col justify-between px-5 py-6 shrink-0
+               fixed md:static top-0 left-0 z-40 transition-transform duration-200"
+        :class="mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'"
+    >
+        <div>
+            {{-- Brand --}}
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-3 mb-10 px-2">
+                <div class="w-11 h-11 rounded-xl bg-[#264132] flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#8B9A86]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422A12.083 12.083 0 0121 12.5c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-.462.079-.906.223-1.32M12 14v7m0-7L5.84 10.578A12.083 12.083 0 003 12.5c0 2.21 1.79 4 4 4s4-1.79 4-4" />
                     </svg>
-                    <svg class="h-6 w-6" :class="{ 'hidden': !mobileOpen, 'block': mobileOpen }" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    {{-- Mobile menu panel --}}
-    <div x-show="mobileOpen" style="display: none;" class="sm:hidden border-t border-stone-200">
-        <div class="space-y-1 pb-3 pt-2">
-            <a href="{{ route('dashboard') }}"
-                class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium
-                    {{ request()->routeIs('dashboard')
-                        ? 'border-emerald-700 bg-emerald-50 text-emerald-800'
-                        : 'border-transparent text-stone-600 hover:border-stone-300 hover:bg-stone-50' }}">
-                Dashboard
+                </div>
+                <div>
+                    <p class="text-white font-bold leading-tight">AbsensiKu</p>
+                    <p class="text-[#8B9A86] text-xs">SMK Negeri 1 Maja</p>
+                </div>
             </a>
 
-            @if(auth()->user()->role === 'admin')
-                <a href="{{ route('admin.classes.index') }}"
-                    class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium
-                        {{ request()->routeIs('admin.classes.*')
-                            ? 'border-emerald-700 bg-emerald-50 text-emerald-800'
-                            : 'border-transparent text-stone-600 hover:border-stone-300 hover:bg-stone-50' }}">
-                    Data Kelas
+            {{-- Menu --}}
+            <nav class="flex flex-col gap-1">
+                <a href="{{ route('dashboard') }}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition
+                        {{ request()->routeIs('dashboard')
+                            ? 'bg-[#264132] text-white'
+                            : 'text-[#8B9A86] hover:bg-[#1a2e22] hover:text-white' }}">
+                    <span class="w-5 h-5 flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <circle cx="12" cy="12" r="9" stroke-width="1.5" />
+                        </svg>
+                    </span>
+                    Dashboard
                 </a>
 
-                <a href="{{ route('admin.students.index') }}"
-                    class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium
-                        {{ request()->routeIs('admin.students.*')
-                            ? 'border-emerald-700 bg-emerald-50 text-emerald-800'
-                            : 'border-transparent text-stone-600 hover:border-stone-300 hover:bg-stone-50' }}">
-                    Data Siswa
-                </a>
+                @if(auth()->user()->role === 'admin')
+                    <a href="{{ route('admin.classes.index') }}"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition
+                            {{ request()->routeIs('admin.classes.*')
+                                ? 'bg-[#264132] text-white'
+                                : 'text-[#8B9A86] hover:bg-[#1a2e22] hover:text-white' }}">
+                        <span class="w-5 h-5 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <circle cx="12" cy="12" r="9" stroke-width="1.5" />
+                            </svg>
+                        </span>
+                        Data Kelas
+                    </a>
 
-                <a href="{{ route('admin.qr-locations.index') }}"
-                    class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium
-                        {{ request()->routeIs('admin.qr-locations.*')
-                            ? 'border-emerald-700 bg-emerald-50 text-emerald-800'
-                            : 'border-transparent text-stone-600 hover:border-stone-300 hover:bg-stone-50' }}">
-                    Lokasi QR
-                </a>
-            @endif
+                    <a href="{{ route('admin.students.index') }}"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition
+                            {{ request()->routeIs('admin.students.*')
+                                ? 'bg-[#264132] text-white'
+                                : 'text-[#8B9A86] hover:bg-[#1a2e22] hover:text-white' }}">
+                        <span class="w-5 h-5 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <circle cx="12" cy="12" r="9" stroke-width="1.5" />
+                            </svg>
+                        </span>
+                        Data Siswa
+                    </a>
+
+                    <a href="{{ route('admin.qr-locations.index') }}"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition
+                            {{ request()->routeIs('admin.qr-locations.*')
+                                ? 'bg-[#264132] text-white'
+                                : 'text-[#8B9A86] hover:bg-[#1a2e22] hover:text-white' }}">
+                        <span class="w-5 h-5 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <circle cx="12" cy="12" r="9" stroke-width="1.5" />
+                            </svg>
+                        </span>
+                        Lokasi QR
+                    </a>
+                @endif
+            </nav>
         </div>
 
-        {{-- Mobile user info + actions --}}
-        <div class="border-t border-stone-200 pb-3 pt-4">
-            <div class="px-4">
-                <div class="text-base font-medium text-stone-800">{{ Auth::user()->name }}</div>
-                <div class="text-sm text-stone-500">{{ Auth::user()->email }}</div>
+        {{-- User info + logout --}}
+        <div class="px-2">
+            <div class="flex items-center gap-3 mb-4">
+                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=264132&color=E3E3DE"
+                     class="w-9 h-9 rounded-full" alt="{{ Auth::user()->name }}">
+                <div class="min-w-0">
+                    <p class="text-sm font-semibold text-white truncate">{{ Auth::user()->name }}</p>
+                    <a href="{{ route('profile.edit') }}" class="text-xs text-[#8B9A86] hover:text-white">Profil</a>
+                </div>
             </div>
-
-            <div class="mt-3 space-y-1">
-                <a href="{{ route('profile.edit') }}"
-                    class="block px-4 py-2 text-base font-medium text-stone-600 hover:bg-stone-50">
-                    Profil
-                </a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit"
-                        class="block w-full px-4 py-2 text-left text-base font-medium text-stone-600 hover:bg-stone-50">
-                        Keluar
-                    </button>
-                </form>
-            </div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit"
+                    class="w-full text-left text-xs font-medium text-[#8B9A86] hover:text-white px-2">
+                    Keluar
+                </button>
+            </form>
+            <p class="text-[#5F6B53] text-xs leading-relaxed mt-4">
+                Absensi Digital<br>Untuk Masa Depan Yang Lebih Baik
+            </p>
         </div>
-    </div>
-</nav>
+    </aside>
+</div>

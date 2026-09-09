@@ -1,107 +1,57 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex flex-col gap-1">
-            <h2 class="font-serif text-2xl text-stone-800">Data Siswa</h2>
-            <p class="text-sm text-stone-500">Kelola daftar siswa beserta kelas yang mereka tempati.</p>
+    <x-slot name="header"><h2>Data Siswa</h2></x-slot>
+
+    @if(session('success'))
+        <div class="flash-success">{{ session('success') }}</div>
+    @endif
+
+    <div class="card">
+        <div class="toolbar">
+            <p style="font-size:12.5px;color:var(--muted);margin:0;">{{ $students->total() }} siswa terdaftar</p>
+            <a href="{{ route('admin.students.create') }}" class="btn btn-primary">+ Tambah Siswa</a>
         </div>
-    </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+        <table>
+            <thead>
+                <tr><th>NIS</th><th>Nama Lengkap</th><th>Kelas</th><th style="text-align:right;">Aksi</th></tr>
+            </thead>
+            <tbody>
+                @forelse($students as $student)
+                    <tr>
+                        <td>{{ $student->nis }}</td>
+                        <td style="font-weight:600;color:var(--primary-dark);">
+                            <span class="av"></span>{{ $student->full_name }}
+                        </td>
+                        <td>
+                            @if($student->classRoom)
+                                <span class="badge ok">{{ $student->classRoom->class_name }}</span>
+                            @else
+                                <span style="color:var(--muted);">—</span>
+                            @endif
+                        </td>
+                        <td style="text-align:right;">
+                            <a href="{{ route('admin.students.edit', $student) }}" class="icon-btn">Edit</a>
+                            <form action="{{ route('admin.students.destroy', $student) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="icon-btn" style="color:var(--danger);"
+                                    onclick="return confirm('Hapus data siswa ini?')">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr><td colspan="4">
+                        <div class="empty-state">
+                            Belum ada siswa yang ditambahkan.
+                            <a href="{{ route('admin.students.create') }}">Tambahkan siswa pertama</a>
+                        </div>
+                    </td></tr>
+                @endforelse
+            </tbody>
+        </table>
 
-            <div class="flex items-center justify-between mb-6">
-                <p class="text-sm text-stone-500">
-                    {{ $students->total() }} siswa terdaftar
-                </p>
-                <a href="{{ route('admin.students.create') }}"
-                    class="inline-flex items-center gap-2 rounded-md bg-emerald-800 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2">
-                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path d="M10 4a1 1 0 011 1v4h4a1 1 0 110 2h-4v4a1 1 0 11-2 0v-4H5a1 1 0 110-2h4V5a1 1 0 011-1z" />
-                    </svg>
-                    Tambah Siswa
-                </a>
-            </div>
-
-            @if(session('success'))
-                <div class="mb-6 flex items-start gap-3 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3">
-                    <svg class="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-700" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 111.4-1.4l2.8 2.8 6.8-6.8a1 1 0 011.4 0z" clip-rule="evenodd" />
-                    </svg>
-                    <p class="text-sm text-emerald-800">{{ session('success') }}</p>
-                </div>
-            @endif
-
-            <div class="overflow-hidden rounded-lg border border-stone-200 bg-white">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="border-b-2 border-stone-200 bg-stone-50/60">
-                            <th class="w-14 px-4 py-3 text-xs font-medium text-stone-500">No</th>
-                            <th class="px-4 py-3 text-xs font-medium text-stone-500">NIS</th>
-                            <th class="px-4 py-3 text-xs font-medium text-stone-500">Nama Lengkap</th>
-                            <th class="px-4 py-3 text-xs font-medium text-stone-500">Kelas</th>
-                            <th class="px-4 py-3 text-right text-xs font-medium text-stone-500">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($students as $student)
-                            <tr class="border-b border-stone-100 last:border-b-0 hover:bg-stone-50/70 transition-colors">
-                                <td class="px-4 py-3 text-sm tabular-nums text-stone-400">
-                                    {{ $loop->iteration }}
-                                </td>
-                                <td class="px-4 py-3 text-sm tabular-nums text-stone-600">
-                                    {{ $student->nis }}
-                                </td>
-                                <td class="px-4 py-3 text-sm font-medium text-stone-800">
-                                    {{ $student->full_name }}
-                                </td>
-                                <td class="px-4 py-3 text-sm">
-                                    @if($student->classRoom)
-                                        <span class="inline-flex items-center rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-800">
-                                            {{ $student->classRoom->class_name }}
-                                        </span>
-                                    @else
-                                        <span class="text-stone-400">—</span>
-                                    @endif
-                                </td>
-                                <td class="px-4 py-3 text-right text-sm">
-                                    <a href="{{ route('admin.students.edit', $student) }}"
-                                        class="text-emerald-700 hover:text-emerald-900 hover:underline underline-offset-2">
-                                        Edit
-                                    </a>
-                                    <form
-                                        action="{{ route('admin.students.destroy', $student) }}"
-                                        method="POST"
-                                        class="inline-block ml-4">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button
-                                            type="submit"
-                                            class="text-rose-700 hover:text-rose-900 hover:underline underline-offset-2"
-                                            onclick="return confirm('Hapus data siswa ini?')">
-                                            Hapus
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="px-4 py-12 text-center">
-                                    <p class="text-sm text-stone-500">Belum ada siswa yang ditambahkan.</p>
-                                    <a href="{{ route('admin.students.create') }}" class="mt-2 inline-block text-sm text-emerald-700 hover:underline">
-                                        Tambahkan siswa pertama
-                                    </a>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-
-                @if($students->hasPages())
-                    <div class="border-t border-stone-100 px-4 py-3">
-                        {{ $students->links() }}
-                    </div>
-                @endif
-            </div>
-        </div>
+        @if($students->hasPages())
+            <div style="margin-top:14px;">{{ $students->links() }}</div>
+        @endif
     </div>
 </x-app-layout>
