@@ -27,6 +27,19 @@
                 </select>
                 @error('class_id') <span class="error">{{ $message }}</span> @enderror
             </div>
+            <div class="field">
+                <label>Akun User (opsional)</label>
+                <select name="user_id">
+                    <option value="">-- Tidak dihubungkan --</option>
+                    @foreach($availableUsers as $user)
+                        <option value="{{ $user->id }}" @selected(old('user_id', $student->user_id) == $user->id)>
+                            {{ $user->name }} ({{ $user->email }})
+                        </option>
+                    @endforeach
+                </select>
+                <small>Hanya menampilkan akun siswa yang sudah mendaftar tapi belum terhubung ke data siswa lain.</small>
+                @error('user_id') <span class="error">{{ $message }}</span> @enderror
+            </div>
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Update</button>
                 <a href="{{ route('admin.students.index') }}" class="btn btn-outline">Batal</a>

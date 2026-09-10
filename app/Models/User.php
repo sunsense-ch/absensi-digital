@@ -21,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        // 'role' sebelumnya tidak ada di sini -> User::create(['role' => ...]) di seeder
+        // akan diam-diam diabaikan Laravel (bukan error, tapi juga tidak tersimpan).
+        // Ditambahkan supaya konsisten dan aman ke depannya.
+        'role',
     ];
 
     /**
@@ -41,4 +45,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // Relasi: satu User (akun login) terhubung ke SATU data Student (kalau perannya siswa)
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
 }

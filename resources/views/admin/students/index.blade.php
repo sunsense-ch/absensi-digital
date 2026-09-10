@@ -13,7 +13,7 @@
 
         <table>
             <thead>
-                <tr><th>NIS</th><th>Nama Lengkap</th><th>Kelas</th><th style="text-align:right;">Aksi</th></tr>
+                <tr><th>NIS</th><th>Nama Lengkap</th><th>Kelas</th><th>Akun</th><th style="text-align:right;">Aksi</th></tr>
             </thead>
             <tbody>
                 @forelse($students as $student)
@@ -29,6 +29,13 @@
                                 <span style="color:var(--muted);">—</span>
                             @endif
                         </td>
+                        <td>
+                            @if($student->user)
+                                <span class="badge ok">Terhubung</span>
+                            @else
+                                <span class="badge warn">Belum terhubung</span>
+                            @endif
+                        </td>
                         <td style="text-align:right;">
                             <a href="{{ route('admin.students.edit', $student) }}" class="icon-btn">Edit</a>
                             <form action="{{ route('admin.students.destroy', $student) }}" method="POST" style="display:inline;">
@@ -40,7 +47,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="4">
+                    <tr><td colspan="5">
                         <div class="empty-state">
                             Belum ada siswa yang ditambahkan.
                             <a href="{{ route('admin.students.create') }}">Tambahkan siswa pertama</a>
