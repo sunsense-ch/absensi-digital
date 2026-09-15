@@ -2,3 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    ::selection {
+        background-color: #E6D4D1;
+        color: #3C2420;
+    }
+}
+
+@layer utilities {
+    .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background-color: #BBC7C9; border-radius: 999px; }
+}
