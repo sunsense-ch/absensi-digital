@@ -11,15 +11,25 @@ use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // with('classRoom', 'user') = eager loading, supaya index bisa cek status
-        // akun terhubung tanpa query database berulang per baris
+        // akun terhubung tanpa query database berulang per baris, 
+        // sekaligus mendukung fitur pencarian dan filter kelas.
         $students = Student::with(['classRoom', 'user'])
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = $request->string('search');
+                $query->where('full_name', 'like', "%{$search}%")
+                    ->orWhere('nis', 'like', "%{$search}%");
+            })
+            ->when($request->filled('class_id'), fn ($query) => $query->where('class_id', $request->integer('class_id')))
             ->latest()
-            ->paginate(20);
+            ->paginate(20)
+            ->withQueryString();
 
-        return view('admin.students.index', compact('students'));
+        $classes = ClassRoom::orderBy('class_name')->get();
+
+        return view('admin.students.index', compact('students', 'classes'));
     }
 
     public function create()

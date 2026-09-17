@@ -8,11 +8,18 @@ use Illuminate\Http\Request;
 
 class QrLocationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // with('tokens') = eager loading, supaya index.blade.php bisa cek token hari ini
-        // tanpa memicu query database berulang per baris (N+1 problem)
-        $qrLocations = QrLocation::with('tokens')->latest()->paginate(10);
+        $qrLocations = QrLocation::with('tokens')
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = $request->string('search');
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('code', 'like', "%{$search}%");
+            })
+            ->when($request->filled('status'), fn ($query) => $query->where('is_active', $request->string('status') === 'aktif'))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return view('admin.qr-locations.index', compact('qrLocations'));
     }
