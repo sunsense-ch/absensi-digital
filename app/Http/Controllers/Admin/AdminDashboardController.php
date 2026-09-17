@@ -18,7 +18,7 @@ class AdminDashboardController extends Controller
         $absenHariIni = Attendance::whereDate('attendance_date', today())->count();
 
         $recentAttendances = Attendance::with(['student', 'qrLocation'])
-            ->latest('attendance_date')
+            ->whereDate('attendance_date', today())
             ->latest('attendance_time')
             ->take(5)
             ->get();

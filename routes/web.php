@@ -71,6 +71,9 @@ Route::middleware(['auth', 'role:siswa'])
     ->name('siswa.')
     ->group(function () {
         Route::get('/dashboard', [SiswaDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/scan', function () {
+            return view('siswa.scan');
+        })->name('scan');
     });
 
 // Route scan QR: WAJIB login sebagai siswa (supaya sistem tahu siapa yang absen).

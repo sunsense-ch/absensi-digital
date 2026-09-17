@@ -25,7 +25,7 @@
     </div>
 
     <div class="card">
-        <p class="section-title">Absensi Terbaru</p>
+        <p class="section-title">Absensi Hari Ini</p>
         <table>
             <thead>
                 <tr><th>Siswa</th><th>Lokasi</th><th>Tanggal</th><th>Waktu</th><th>Status</th></tr>
@@ -52,7 +52,7 @@
                     </tr>
                 @empty
                     <tr><td colspan="5">
-                        <div class="empty-state">Belum ada data absensi.</div>
+                        <div class="empty-state">Belum ada siswa yang absen hari ini.</div>
                     </td></tr>
                 @endforelse
             </tbody>

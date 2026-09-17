@@ -8,6 +8,8 @@
         <p style="font-size:12.5px;color:var(--muted);margin:0 0 16px;">
             Selamat datang di Aplikasi Absensi Digital.
         </p>
-        <button class="btn btn-primary">Scan QR Absensi</button>
+        <a href="{{ route('siswa.scan') }}" class="btn btn-primary" style="display:inline-block;text-decoration:none;">
+            Scan QR Absensi
+        </a>
     </div>
 </x-app-layout>
