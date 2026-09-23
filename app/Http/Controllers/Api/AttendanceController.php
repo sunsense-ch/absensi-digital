@@ -1,4 +1,3 @@
-@'
 <?php
 
 namespace App\Http\Controllers\Api;
@@ -7,16 +6,25 @@ use App\Helpers\GeoHelper;
 use App\Http\Controllers\Controller;
 use App\Models\QrToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AttendanceController extends Controller
 {
     public function scan(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'qr_token' => ['required', 'string'],
             'latitude' => ['required', 'numeric', 'between:-90,90'],
             'longitude' => ['required', 'numeric', 'between:-180,180'],
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak valid.',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
 
         $user = $request->user();
         $student = $user->student;
@@ -103,4 +111,3 @@ class AttendanceController extends Controller
         ]);
     }
 }
-'@ | Set-Content -Path "app\Http\Controllers\Api\AttendanceController.php" -Encoding UTF8
