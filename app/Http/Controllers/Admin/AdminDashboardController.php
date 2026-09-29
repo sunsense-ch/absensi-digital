@@ -20,7 +20,7 @@ class AdminDashboardController extends Controller
         $belumAbsenHariIni = max($totalSiswa - $absenHariIni, 0);
 
         $recentAttendances = Attendance::with(['student', 'qrLocation'])
-            ->latest('attendance_date')
+            ->whereDate('attendance_date', today())
             ->latest('attendance_time')
             ->take(6)
             ->get();

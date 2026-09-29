@@ -1,0 +1,26 @@
+CARA PASANG (semua path relatif dari folder project: C:\xampp\htdocs\absensi-digital)
+
+Timpa file berikut dengan file di folder ini (path-nya sama persis):
+
+  app\Http\Controllers\Api\AttendanceController.php
+  app\Http\Controllers\Siswa\ScanController.php
+  routes\api.php
+  resources\views\admin\dashboard.blade.php
+  resources\views\auth\login.blade.php
+  resources\views\layouts\guest.blade.php
+  resources\views\siswa\dashboard.blade.php
+  test-scan.ps1
+
+File BARU (belum ada di project, cukup taruh):
+
+  resources\views\scan\locate.blade.php
+
+Setelah itu jalankan di terminal project:
+
+  git grep -n -E "^(<<<<<<<|=======|>>>>>>>)" -- app routes resources
+  (harus kosong / tidak ada hasil)
+
+  php artisan optimize:clear
+  git add .
+  git commit -m "Selesaikan merge, GPS di API dan halaman scan web"
+  git push

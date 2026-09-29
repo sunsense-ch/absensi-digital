@@ -10,9 +10,14 @@ class TrustProxies extends Middleware
     /**
      * The trusted proxies for this application.
      *
+     * '*' = percayai SEMUA proxy di depan aplikasi (aman untuk dev/testing
+     * lewat ngrok, karena ngrok meneruskan request asli sebagai HTTP ke server
+     * lokal -- tanpa ini, Laravel tidak tahu bahwa koneksi sebenarnya HTTPS,
+     * sehingga cookie session/CSRF gagal tersimpan dengan benar -> "Page Expired".
+     *
      * @var array<int, string>|string|null
      */
-    protected $proxies;
+    protected $proxies = '*';
 
     /**
      * The headers that should be used to detect proxies.

@@ -45,12 +45,4 @@
             </p>
         @endif
     </form>
-</x-guest-layo    resources\views\auth\
-6	dashboard.blade.php (admin)	resources\views\admin\
-7	dashboard.blade.php (siswa)	resources\views\siswa\
-8	test-sca    resources\views\auth\
-6	dashboard.blade.php (admin)	resources\views\admin\
-7	dashboard.blade.php (siswa)	resources\views\siswa\
-8	test-scan.ps1	folder root project
-n.ps1	folder root project
-ut>
+</x-guest-layout>

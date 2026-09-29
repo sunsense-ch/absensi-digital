@@ -59,6 +59,9 @@ Route::middleware(['auth', 'role:siswa'])
     ->name('siswa.')
     ->group(function () {
         Route::get('/dashboard', [SiswaDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/scan', function () {
+            return view('siswa.scan');
+        })->name('scan');
     });
 
 Route::get('/scan/{token}', [ScanController::class, 'scan'])
